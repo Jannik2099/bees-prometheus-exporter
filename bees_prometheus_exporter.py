@@ -58,14 +58,14 @@ class BeesCollector(Collector):
         yield from counters.values()
 
     def _collect_stats_from_file(self, stats_file: Path) -> tuple[dict[str, int], float]:
-        if not stats_file.exists():
+        try:
+            with stats_file.open() as f:
+                timestamp = os.fstat(f.fileno()).st_mtime
+                logger.debug(f"Reading stats from {stats_file}")
+                lines = f.readlines()
+        except FileNotFoundError:
             logger.warning(f"Status file {stats_file} does not exist.")
             return {}, 0.0
-
-        with stats_file.open() as f:
-            timestamp = os.fstat(f.fileno()).st_mtime
-            logger.debug(f"Reading stats from {stats_file}")
-            lines = f.readlines()
 
         ret: dict[str, int] = {}
         total_head_found = False
