@@ -75,9 +75,14 @@ The exporter reads Bees status files (`<fs-uuid>.status`) from bees' work direct
 
 The available metrics are described in https://github.com/Zygo/bees/blob/master/docs/event-counters.md
 
+Additionally, the exporter reads the per-extent-size progress summary.
+
 ### Metric Format
 
 All metrics follow the pattern `bees_{metric_name}_total` and include a `uuid` label identifying the filesystem.
+
+The per-extent-size progress summary is formatted as `bees_progress_summary_{column_name}`, with the columns `datasz`, `point`, `gen_min` and `gen_max`. The extent size is provided as a label.  
+When `point` is idle, `bees_progress_summary_point_idle` reports 1, else 0
 
 ## Configuration
 
