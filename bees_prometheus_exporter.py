@@ -62,8 +62,8 @@ class BeesCollector(Collector):
             logger.warning(f"Status file {stats_file} does not exist.")
             return {}, 0.0
 
-        timestamp = stats_file.stat().st_mtime
         with stats_file.open() as f:
+            timestamp = os.fstat(f.fileno()).st_mtime
             logger.debug(f"Reading stats from {stats_file}")
             lines = f.readlines()
 
