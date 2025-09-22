@@ -2,42 +2,27 @@ use anyhow::Context;
 use clap::Parser;
 use log::info;
 use prometheus_client::registry::Registry;
-use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 mod collector;
+mod config;
+mod landlock;
 mod logging;
 mod server;
 
 use collector::BeesCollector;
+use config::Args;
+use landlock::init_landlock;
 use logging::init_logger;
 use server::start_server;
-
-#[derive(Debug, Parser)]
-#[command(author, version, about)]
-struct Args {
-    /// Bees working directory path
-    #[arg(short, long, default_value = "/run/bees")]
-    pub bees_work_dir: PathBuf,
-
-    /// Port to bind the HTTP server to
-    #[arg(short, long, default_value = "8080")]
-    pub port: u16,
-
-    /// Address to bind the HTTP server to
-    #[arg(short, long, default_value = "::0")]
-    pub address: String,
-
-    /// Logging level (error, warn, info, debug, trace)
-    #[arg(short, long, default_value = "info")]
-    pub log_level: String,
-}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     init_logger(&args.log_level).context("Failed to initialize logger")?;
+    init_landlock(&args)?;
+    info!("Initialized landlock sandbox");
 
     info!("Starting bees prometheus exporter");
     info!("Stats directory: {:?}", args.bees_work_dir);

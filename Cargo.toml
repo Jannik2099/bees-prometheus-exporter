@@ -31,3 +31,4 @@ axum = { version = "0.8.4", features = [
 log4rs = { version = "1.4.0", features = [
   "console_appender",
 ], default-features = false }
+landlock = "0.4.3"
