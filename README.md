@@ -1,25 +1,27 @@
 # Bees Prometheus Exporter
 
-A Prometheus metrics exporter for the [Bees](https://github.com/zygo/bees) deduplication daemon.
+A Prometheus metrics exporter for the [Bees](https://github.com/zygo/bees) deduplication daemon, written in Rust.
 
 ## Installation
 
 ### From Source
 
-Clone the repository and install:
+Clone the repository and build:
 
 ```bash
 git clone https://github.com/Jannik2099/bees-prometheus-exporter
 cd bees-prometheus-exporter
-pip install .
+cargo build --release
 ```
 
-### Using uv
+The binary will be located at `target/release/bees-prometheus-exporter`.
+
+### Using Cargo
+
+Install directly from the repository:
 
 ```bash
-git clone https://github.com/Jannik2099/bees-prometheus-exporter
-cd bees-prometheus-exporter
-uv sync
+cargo install --git https://github.com/Jannik2099/bees-prometheus-exporter
 ```
 
 ## Usage
@@ -38,40 +40,28 @@ The exporter will start on port 8080 and read Bees statistics from `/run/bees/`.
 bees-prometheus-exporter [OPTIONS]
 ```
 
-- `--bees-work-dir PATH`: Path to Bees work directory (default: `/run/bees/`)
-- `--port PORT`: Port to expose metrics on (default: `8080`)
-- `--listen-address ADDRESS`: Bind address for the HTTP server (default: `::0`)
-- `--log-level LEVEL`: Logging level (default: `INFO`)
+- `-s, --bees-work-dir PATH`: Path to Bees work directory (default: `/run/bees`)
+- `-p, --port PORT`: Port to bind the HTTP server to (default: `8080`)
+- `-a, --address ADDRESS`: Address to bind the HTTP server to (default: `::0`)
+- `-l, --log-level LEVEL`: Logging level - error, warn, info, debug, trace (default: `info`)
 
 ### Examples
-
-Run on a custom port:
-
-```bash
-bees-prometheus-exporter --port 9090
-```
-
-Use a different Bees work directory:
-
-```bash
-bees-prometheus-exporter --bees-work-dir /var/lib/bees/
-```
 
 Bind to localhost only:
 
 ```bash
-bees-prometheus-exporter --listen-address 127.0.0.1
+bees-prometheus-exporter --address 127.0.0.1
 ```
 
 Enable debug logging:
 
 ```bash
-bees-prometheus-exporter --log-level DEBUG
+bees-prometheus-exporter --log-level debug
 ```
 
 ## Metrics
 
-The exporter reads Bees status files (`<fs-uuid>.status`) from bees' work directory, by default `/run/bees`.
+The exporter reads Bees status files (`<fs-uuid>.status`) from bees' stats directory, by default `/run/bees`.
 
 The available metrics are described in https://github.com/Zygo/bees/blob/master/docs/event-counters.md
 
@@ -81,7 +71,7 @@ Additionally, the exporter reads the per-extent-size progress summary.
 
 All metrics follow the pattern `bees_{metric_name}_total` and include a `uuid` label identifying the filesystem.
 
-The per-extent-size progress summary is formatted as `bees_progress_summary_{column_name}`, with the columns `datasz`, `point`, `gen_min` and `gen_max`. The extent size is provided as a label.  
+The per-extent-size progress summary is formatted as `bees_progress_summary_{column_name}`, with the columns `datasz_bytes`, `point`, `gen_min` and `gen_max`. The extent size is provided as a label.  
 When `point` is idle, `bees_progress_summary_point_idle` reports 1, else 0
 
 ## Configuration
@@ -124,6 +114,5 @@ rate(bees_files_scanned_total[5m])
 
 ## Requirements
 
-- Python 3.9+
-- `prometheus-client` library
+- Rust 1.85+ (for building from source)
 - Bees deduplication daemon running and producing status files

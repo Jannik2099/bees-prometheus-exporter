@@ -10,37 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
 
-      - run: npm install prettier
+      - run: npm install prettier prettier-plugin-toml
 
       - run: npx prettier --check .
 
-  isort:
+  rustfmt:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: astral-sh/setup-uv@v3
+      - name: Install rustfmt
+        run: |
+          rustup update --no-self-update
+          rustup component add cargo rustfmt
 
-      - name: Set up Python
-        run: uv python install
-
-      - name: Run isort
-        run: uv run isort --check-only --diff .
-
-  black:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: astral-sh/setup-uv@v3
-
-      - run: uv python install
-
-      - name: Run black
-        run: uv run black --check --diff .
+      - name: Run rustfmt
+        run: cargo fmt --check
