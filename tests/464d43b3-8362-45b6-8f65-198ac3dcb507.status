@@ -1,0 +1,30 @@
+TOTAL:
+	crawl_discard_high=1450 crawl_discard_low=820 crawl_done=30 crawl_flop=38 crawl_gen_low=988 crawl_restart=30 crawl_skip=117 crawl_skip_ms=26
+	hash_extent_in=8192
+	open_clear=5
+	progress_ok=30
+	root_clear=5
+RATES:
+	crawl_discard_high=0.739 crawl_discard_low=0.418 crawl_done=0.016 crawl_flop=0.02 crawl_gen_low=0.504 crawl_restart=0.016 crawl_skip=0.06 crawl_skip_ms=0.014
+	hash_extent_in=4.173
+	open_clear=0.003
+	progress_ok=0.016
+	root_clear=0.003
+THREADS (work queue 0 of 8 tasks, 1 workers, load: current 0 target 0 average 0):
+	tid 3422: bees: [1963.43s] waiting for signals
+	tid 3612: progress_report: [1963.43s] idle 3600
+	tid 3615: status_report: writing status to file '/run/bees//464d43b3-8362-45b6-8f65-198ac3dcb507.status'
+	tid 3618: hash_writeback: [1963.43s] idle after writing 0 of 8192 extents
+	tid 3620: hash_prefetch: [1953.01s] idle 3600s
+	tid 3622: crawl_transid: [93.707s] waiting 473.68s for next transid RateEstimator { count = 68673, raw = 3.86344 / 1830.03, ratio = 3.86344 / 1923.74, rate = 0.0020083, duration(1) = 497.935, seconds_for(1) = 404.228 }
+	tid 3624: crawl_writeback: [165.294s] idle, dirty
+PROGRESS:
+extsz   datasz point gen_min gen_max this cycle start tm_left   next cycle ETA
+----- -------- ----- ------- ------- ---------------- ------- ----------------
+  max   1.615T  idle   68671   68672 2025-09-23 16:34       -                -
+  32M  67.563G  idle   68671   68672 2025-09-23 16:34       -                -
+   8M 483.692M  idle   68671   68672 2025-09-23 16:34       -                -
+   2M 722.581M  idle   68671   68672 2025-09-23 16:34       -                -
+ 512K 117.932M  idle   68671   68672 2025-09-23 16:34       -                -
+ 128K 454.546M  idle   68671   68672 2025-09-23 16:34       -                -
+total   1.683T       gen_now   68673                  updated 2025-09-23 16:48

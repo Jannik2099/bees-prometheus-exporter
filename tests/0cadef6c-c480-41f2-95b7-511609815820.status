@@ -1,0 +1,44 @@
+TOTAL:
+	addr_block=10 addr_compressed_offset=2 addr_eof_e=9 addr_uncompressed=8
+	block_bytes=12123 block_hash=10 block_read=10
+	crawl_discard_high=123773 crawl_discard_low=143393 crawl_done=36 crawl_extent=2131 crawl_flop=30458 crawl_gen_low=140875 crawl_restart=36 crawl_skip=47626 crawl_skip_ms=216
+	extent_forward=2131 extent_mapped=2131 extent_ms=1 extent_ok=2131 extent_ref_ok=2131
+	hash_erase=9 hash_evict=1 hash_extent_in=8192 hash_extent_out=10 hash_insert=10 hash_lookup=10
+	open_clear=6 open_file=9 open_hit=9 open_lookup_ok=9
+	progress_ok=36
+	readahead_skip=9
+	resolve_empty=9 resolve_fail=9
+	root_clear=6
+	scan_blacklisted=2122 scan_block=10 scan_compressed_no_dedup=1 scan_extent=9 scan_forward=2131 scan_found=9 scan_hash_insert=10 scan_hash_preinsert=10 scan_lookup=10 scan_resolve_zero=9 scan_seen_insert=9 scan_seen_miss=9
+	scanf_extent=9 scanf_total=9
+RATES:
+	addr_block=0.006 addr_compressed_offset=0.002 addr_eof_e=0.005 addr_uncompressed=0.005
+	block_bytes=6.175 block_hash=0.006 block_read=0.006
+	crawl_discard_high=63.04 crawl_discard_low=73.032 crawl_done=0.019 crawl_extent=1.086 crawl_flop=15.513 crawl_gen_low=71.75 crawl_restart=0.019 crawl_skip=24.257 crawl_skip_ms=0.111
+	extent_forward=1.086 extent_mapped=1.086 extent_ms=0.001 extent_ok=1.086 extent_ref_ok=1.086
+	hash_erase=0.005 hash_evict=0.001 hash_extent_in=4.173 hash_extent_out=0.006 hash_insert=0.006 hash_lookup=0.006
+	open_clear=0.004 open_file=0.005 open_hit=0.005 open_lookup_ok=0.005
+	progress_ok=0.019
+	readahead_skip=0.005
+	resolve_empty=0.005 resolve_fail=0.005
+	root_clear=0.004
+	scan_blacklisted=1.081 scan_block=0.006 scan_compressed_no_dedup=0.001 scan_extent=0.005 scan_forward=1.086 scan_found=0.005 scan_hash_insert=0.006 scan_hash_preinsert=0.006 scan_lookup=0.006 scan_resolve_zero=0.005 scan_seen_insert=0.005 scan_seen_miss=0.005
+	scanf_extent=0.005 scanf_total=0.005
+THREADS (work queue 0 of 8 tasks, 1 workers, load: current 0 target 0 average 0):
+	tid 3426: bees: [1963.43s] waiting for signals
+	tid 3614: progress_report: [1963.43s] idle 3600
+	tid 3617: status_report: writing status to file '/run/bees//0cadef6c-c480-41f2-95b7-511609815820.status'
+	tid 3619: hash_writeback: [1495.62s] idle after writing 2 of 8192 extents
+	tid 3621: hash_prefetch: [1951.7s] idle 3600s
+	tid 3623: crawl_transid: [99.77s] waiting 272.638s for next transid RateEstimator { count = 104354, raw = 6.54728 / 1785.04, ratio = 6.54728 / 1884.81, rate = 0.00347372, duration(1) = 287.876, seconds_for(1) = 188.107 }
+	tid 3629: crawl_writeback: [165.306s] idle, dirty
+PROGRESS:
+extsz   datasz point gen_min gen_max this cycle start tm_left   next cycle ETA
+----- -------- ----- ------- ------- ---------------- ------- ----------------
+  max 489.704G  idle  104352  104353 2025-09-23 16:33       -                -
+  32M   99.12G  idle  104352  104353 2025-09-23 16:33       -                -
+   8M 137.953G  idle  104352  104353 2025-09-23 16:33       -                -
+   2M   95.93G  idle  104352  104353 2025-09-23 16:33       -                -
+ 512K  62.555G  idle  104352  104353 2025-09-23 16:33       -                -
+ 128K   4.737G  idle  104352  104353 2025-09-23 16:33       -                -
+total     890G       gen_now  104354                  updated 2025-09-23 16:48

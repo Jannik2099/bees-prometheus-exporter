@@ -4,7 +4,7 @@ use landlock::{
 };
 use log::{info, warn};
 
-use crate::Args;
+use crate::config::Args;
 
 pub fn init_landlock(args: &Args) -> Result<(), RulesetError> {
     let handle_success = |name: &str| {

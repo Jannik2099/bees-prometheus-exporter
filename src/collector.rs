@@ -9,24 +9,25 @@ use regex::Regex;
 use std::collections::BTreeMap;
 use std::os::unix::ffi::OsStrExt;
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
 use std::time::SystemTime;
 use tokio::fs::{File, metadata};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]
-enum PointValue {
+pub enum PointValue {
     Number(u64),
     Idle,
 }
 
 #[derive(Debug, Clone)]
-struct ProgressRow {
-    extsz: String,
-    datasz: u64,
-    point: PointValue,
-    gen_min: u64,
-    gen_max: u64,
+pub struct ProgressRow {
+    pub extsz: String,
+    pub datasz: u64,
+    pub point: PointValue,
+    pub gen_min: u64,
+    pub gen_max: u64,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, EncodeLabelSet)]
@@ -41,13 +42,13 @@ struct UuidExtentLabel {
 }
 
 #[derive(Debug)]
-struct FsMetrics {
-    stats: BTreeMap<String, f64>,
-    progress: Vec<ProgressRow>,
+pub struct FsMetrics {
+    pub stats: BTreeMap<String, f64>,
+    pub progress: Vec<ProgressRow>,
     // Adding timestamps to metrics is currently not supported in the Rust client
     // See https://github.com/prometheus/client_rust/issues/126
     #[allow(unused)]
-    timestamp: u64,
+    pub timestamp: u64,
 }
 
 #[derive(Debug)]
@@ -60,8 +61,7 @@ enum ParserState {
 
 #[derive(Debug)]
 pub struct BeesCollector {
-    stats_dir: PathBuf,
-    pattern: Regex,
+    pub stats_dir: PathBuf,
 }
 
 impl BeesCollector {
@@ -71,15 +71,12 @@ impl BeesCollector {
             .await
             .with_context(|| format!("Cannot access stats directory: {:?}", stats_dir))?;
 
-        let pattern =
-            Regex::new(r"(?-u:(\w+)=(\d+))").context("Failed to compile regex pattern")?;
-
-        Ok(BeesCollector { stats_dir, pattern })
+        Ok(BeesCollector { stats_dir })
     }
 
     /// Collect all data from bees status files
-    async fn collect_all_data(&self) -> Result<BTreeMap<Uuid, FsMetrics>> {
-        let status_file_pattern = format!("{}/*.status", self.stats_dir.display());
+    pub async fn collect_all_data(stats_dir: &Path) -> Result<BTreeMap<Uuid, FsMetrics>> {
+        let status_file_pattern = format!("{}/*.status", stats_dir.display());
         let mut values: BTreeMap<Uuid, FsMetrics> = BTreeMap::new();
 
         for entry in glob(&status_file_pattern)
@@ -90,7 +87,7 @@ impl BeesCollector {
                 .file_stem()
                 .and_then(|s| Uuid::try_parse_ascii(s.as_bytes()).ok())
             {
-                match self.collect_stats_from_file(&entry).await {
+                match Self::collect_stats_from_file(&entry).await {
                     Ok(stats) => {
                         values.insert(uuid, stats);
                     }
@@ -106,7 +103,7 @@ impl BeesCollector {
         Ok(values)
     }
 
-    async fn collect_stats_from_file(&self, stats_file: &Path) -> Result<FsMetrics> {
+    pub async fn collect_stats_from_file(stats_file: &Path) -> Result<FsMetrics> {
         let file = File::open(stats_file)
             .await
             .with_context(|| format!("Cannot open stats file: {:?}", stats_file))?;
@@ -153,14 +150,14 @@ impl BeesCollector {
             }
             if line.starts_with("PROGRESS:") {
                 parser_state = ParserState::Progress;
-                progress = self.parse_progress_lines(&mut line_iter)?;
+                progress = Self::parse_progress_lines(&mut line_iter)?;
                 continue;
             }
 
             match parser_state {
                 ParserState::Rates | ParserState::None => continue,
                 ParserState::Total => {
-                    match self.parse_total_line(line) {
+                    match Self::parse_total_line(line) {
                         Ok(parsed_metrics) => {
                             stats.extend(parsed_metrics);
                         }
@@ -190,11 +187,14 @@ impl BeesCollector {
         })
     }
 
-    fn parse_total_line(&self, line: &str) -> Result<Vec<(String, f64)>> {
+    fn parse_total_line(line: &str) -> Result<Vec<(String, f64)>> {
+        static PATTERN: LazyLock<Regex> =
+            LazyLock::new(|| Regex::new(r"(?-u:(\w+)=(\d+))").unwrap());
+
         let mut ret = Vec::new();
         for caps in line
             .split_ascii_whitespace()
-            .filter_map(|word| self.pattern.captures(word))
+            .filter_map(|word| PATTERN.captures(word))
         {
             let metric_name = caps
                 .get(1)
@@ -223,10 +223,7 @@ impl BeesCollector {
         Ok(ret)
     }
 
-    fn parse_progress_lines(
-        &self,
-        lines: &mut std::slice::Iter<String>,
-    ) -> Result<Vec<ProgressRow>> {
+    fn parse_progress_lines(lines: &mut std::slice::Iter<String>) -> Result<Vec<ProgressRow>> {
         // Check for header line
         if let Some(line) = lines.next() {
             if !line.starts_with("extsz") {
@@ -340,7 +337,7 @@ impl Collector for BeesCollector {
     fn encode(&self, mut encoder: DescriptorEncoder) -> Result<(), std::fmt::Error> {
         // Collect all data from bees status files
         let values = match tokio::task::block_in_place(|| {
-            tokio::runtime::Handle::current().block_on(self.collect_all_data())
+            tokio::runtime::Handle::current().block_on(Self::collect_all_data(&self.stats_dir))
         }) {
             Ok(data) => data,
             Err(e) => {

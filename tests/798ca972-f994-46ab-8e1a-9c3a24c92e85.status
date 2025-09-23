@@ -1,0 +1,63 @@
+TOTAL:
+	addr_block=22382663 addr_compressed_offset=20216937 addr_eof_e=1235565 addr_from_fd=15123367 addr_from_root_fd=1563900 addr_hole=769563 addr_magic=769563 addr_ms=154 addr_uncompressed=2165726
+	adjust_compressed_offset_correct=572467 adjust_eof_fail=8584 adjust_eof_haystack=41068 adjust_eof_hit=32561 adjust_eof_miss=837 adjust_eof_needle=41982 adjust_exact=89230 adjust_exact_correct=88643 adjust_hit=661110 adjust_miss=12195 adjust_needle_too_long=53 adjust_offset_high=375657 adjust_offset_hit=584128 adjust_offset_low=291000 adjust_try=1381997
+	block_bytes=71377533932 block_hash=10671211 block_ms=80810 block_read=18064443 block_zero=460343
+	chase_corrected=162588 chase_hit=693671 chase_no_data=688326 chase_no_fd=28329 chase_try=1592229 chase_uncorrected=531083 chase_wrong_addr=49659 chase_wrong_magic=132244
+	crawl_discard_high=1883747 crawl_discard_low=74299354 crawl_done=306 crawl_extent=164585 crawl_flop=2714597 crawl_gen_high=2053 crawl_gen_low=3959700 crawl_restart=310 crawl_skip=7453634 crawl_skip_ms=7596
+	dedup_bytes=18503591434 dedup_copy=245977440 dedup_hit=637823 dedup_ms=26600 dedup_prealloc_bytes=45224144 dedup_prealloc_hit=5 dedup_try=637823
+	exception_caught=2 exception_caught_silent=170
+	extent_empty=20 extent_forward=1931664 extent_mapped=164584 extent_ms=15136 extent_ok=164585 extent_ref_missing=29040 extent_ref_ok=1931664 extent_zero=1
+	hash_erase=10561 hash_evict=1957183 hash_extent_in=16384 hash_extent_out=1951 hash_front=26330 hash_front_already=535806 hash_insert=1967781 hash_lookup=7116739
+	open_clear=62 open_fail_enoent=37 open_file=1629577 open_hit=1629366 open_ino_ms=10741 open_lookup_enoent=44 open_lookup_ok=1629552 open_no_path=186 open_no_root=11076 open_root_ms=16 open_wrong_flags=174
+	pairbackward_bof_first=14134 pairbackward_hit=477531 pairbackward_miss=79735 pairbackward_ms=20079 pairbackward_same=18 pairbackward_stop=693262 pairbackward_try=571454 pairbackward_zero=36
+	pairforward_eof_first=76403 pairforward_eof_malign=6539 pairforward_hit=3743505 pairforward_miss=59839 pairforward_ms=149252 pairforward_overlap=608 pairforward_same=1542 pairforward_stop=693262 pairforward_try=3893817 pairforward_zero=5381
+	progress_ok=372
+	readahead_bytes=1500448532 readahead_clear=119 readahead_count=52705 readahead_fail=2497 readahead_ms=845 readahead_skip=2113390 readahead_unread_ms=12
+	replacedst_dedup_hit=531089 replacedst_grown=508413 replacedst_overlaps=239 replacedst_same=170 replacedst_try=575789
+	replacesrc_dedup_hit=118459 replacesrc_grown=40910 replacesrc_try=15296
+	resolve_empty=8023 resolve_fail=8020 resolve_large=9659 resolve_ms=595716 resolve_ok=556969 resolve_overflow=2
+	root_clear=62 root_found=1594 root_notfound=37 root_ok=1594 root_open_fail=6 root_parent_open_ok=1600 root_parent_open_try=1600
+	scan_already=132293 scan_blacklisted=199 scan_block=6404152 scan_compressed_no_dedup=81690 scan_dup_block=4264044 scan_dup_hit=574803 scan_extent=2158520 scan_forward=1931664 scan_found=4504973 scan_hash_hit=574803 scan_hash_insert=1935537 scan_hash_miss=816 scan_hash_preinsert=6278345 scan_hole=69103 scan_lookup=2895703 scan_malign=67 scan_push_front=562136 scan_reinsert=32244 scan_resolve_hit=575789 scan_resolve_zero=9745 scan_rewrite=15296 scan_seen_clear=11 scan_seen_erase=506105 scan_seen_hit=1331952 scan_seen_insert=118890 scan_seen_miss=757458 scan_skip_bytes=6959 scan_skip_ops=1 scan_zero=125807
+	scanf_extent=2158348 scanf_extent_ms=1160862 scanf_no_fd=9930 scanf_total=1921535 scanf_total_ms=1226189
+	tmp_aligned=15303 tmp_block=32244 tmp_block_zero=28563 tmp_bytes=129026084 tmp_copy=15296 tmp_copy_ms=10 tmp_create=1 tmp_hole=7 tmp_resize=30607 tmp_resize_ms=40
+RATES:
+	addr_block=11398.4 addr_compressed_offset=10295.5 addr_eof_e=629.212 addr_from_fd=7701.57 addr_from_root_fd=796.416 addr_hole=391.9 addr_magic=391.9 addr_ms=0.079 addr_uncompressed=1102.9
+	adjust_compressed_offset_correct=291.529 adjust_eof_fail=4.372 adjust_eof_haystack=20.914 adjust_eof_hit=16.582 adjust_eof_miss=0.427 adjust_eof_needle=21.38 adjust_exact=45.441 adjust_exact_correct=45.142 adjust_hit=336.671 adjust_miss=6.211 adjust_needle_too_long=0.027 adjust_offset_high=191.304 adjust_offset_hit=297.468 adjust_offset_low=148.192 adjust_try=703.782
+	block_bytes=3.6349e+07 block_hash=5434.31 block_ms=41.153 block_read=9199.32 block_zero=234.43
+	chase_corrected=82.798 chase_hit=353.252 chase_no_data=350.53 chase_no_fd=14.427 chase_try=810.843 chase_uncorrected=270.454 chase_wrong_addr=25.289 chase_wrong_magic=67.346
+	crawl_discard_high=959.298 crawl_discard_low=37836.9 crawl_done=0.156 crawl_extent=83.815 crawl_flop=1382.41 crawl_gen_high=1.046 crawl_gen_low=2016.48 crawl_restart=0.158 crawl_skip=3795.76 crawl_skip_ms=3.869
+	dedup_bytes=9.42295e+06 dedup_copy=125264 dedup_hit=324.812 dedup_ms=13.547 dedup_prealloc_bytes=23030.4 dedup_prealloc_hit=0.003 dedup_try=324.812
+	exception_caught=0.002 exception_caught_silent=0.087
+	extent_empty=0.011 extent_forward=983.7 extent_mapped=83.815 extent_ms=7.709 extent_ok=83.815 extent_ref_missing=14.789 extent_ref_ok=983.7 extent_zero=0.001
+	hash_erase=5.379 hash_evict=996.696 hash_extent_in=8.344 hash_extent_out=0.994 hash_front=13.409 hash_front_already=272.86 hash_insert=1002.09 hash_lookup=3624.2
+	open_clear=0.032 open_fail_enoent=0.019 open_file=829.862 open_hit=829.755 open_ino_ms=5.47 open_lookup_enoent=0.023 open_lookup_ok=829.85 open_no_path=0.095 open_no_root=5.641 open_root_ms=0.009 open_wrong_flags=0.089
+	pairbackward_bof_first=7.198 pairbackward_hit=243.183 pairbackward_miss=40.606 pairbackward_ms=10.226 pairbackward_same=0.01 pairbackward_stop=353.044 pairbackward_try=291.013 pairbackward_zero=0.019
+	pairforward_eof_first=38.909 pairforward_eof_malign=3.33 pairforward_hit=1906.38 pairforward_miss=30.474 pairforward_ms=76.007 pairforward_overlap=0.31 pairforward_same=0.786 pairforward_stop=353.044 pairforward_try=1982.93 pairforward_zero=2.741
+	progress_ok=0.19
+	readahead_bytes=764103 readahead_clear=0.061 readahead_count=26.841 readahead_fail=1.272 readahead_ms=0.431 readahead_skip=1076.24 readahead_unread_ms=0.007
+	replacedst_dedup_hit=270.458 replacedst_grown=258.91 replacedst_overlaps=0.122 replacedst_same=0.087 replacedst_try=293.221
+	replacesrc_dedup_hit=60.326 replacesrc_grown=20.834 replacesrc_try=7.79
+	resolve_empty=4.086 resolve_fail=4.085 resolve_large=4.919 resolve_ms=303.369 resolve_ok=283.637 resolve_overflow=0.002
+	root_clear=0.032 root_found=0.812 root_notfound=0.019 root_ok=0.812 root_open_fail=0.004 root_parent_open_ok=0.815 root_parent_open_try=0.815
+	scan_already=67.371 scan_blacklisted=0.102 scan_block=3261.31 scan_compressed_no_dedup=41.601 scan_dup_block=2171.46 scan_dup_hit=292.719 scan_extent=1099.23 scan_forward=983.7 scan_found=2294.16 scan_hash_hit=292.719 scan_hash_insert=985.673 scan_hash_miss=0.416 scan_hash_preinsert=3197.25 scan_hole=35.191 scan_lookup=1474.64 scan_malign=0.035 scan_push_front=286.268 scan_reinsert=16.421 scan_resolve_hit=293.221 scan_resolve_zero=4.963 scan_rewrite=7.79 scan_seen_clear=0.006 scan_seen_erase=257.734 scan_seen_hit=678.297 scan_seen_insert=60.545 scan_seen_miss=385.736 scan_skip_bytes=3.544 scan_skip_ops=0.001 scan_zero=64.068
+	scanf_extent=1099.14 scanf_extent_ms=591.169 scanf_no_fd=5.057 scanf_total=978.542 scanf_total_ms=624.437
+	tmp_aligned=7.794 tmp_block=16.421 tmp_block_zero=14.546 tmp_bytes=65706.5 tmp_copy=7.79 tmp_copy_ms=0.006 tmp_create=0.001 tmp_hole=0.004 tmp_resize=15.587 tmp_resize_ms=0.021
+THREADS (work queue 0 of 8 tasks, 1 workers, load: current 0 target 0 average 0):
+	tid 3430: bees: [1963.67s] waiting for signals
+	tid 3611: extent_253_512K_2M: subvol 253 skipping forward 512K from 0x14a5af97000 to 0x14a5b017000
+	tid 3613: progress_report: [1963.67s] idle 3600
+	tid 3616: status_report: writing status to file '/run/bees//798ca972-f994-46ab-8e1a-9c3a24c92e85.status'
+	tid 3625: hash_writeback: flush rate limited after extent #2755 of 16384 extents
+	tid 3626: hash_prefetch: [1943.77s] idle 3600s
+	tid 3627: crawl_transid: waiting 30s for next transid RateEstimator { count = 1529634, raw = 50.1812 / 1445.56, ratio = 50.1812 / 1448.3, rate = 0.0346485, duration(1) = 28.8613, seconds_for(1) = 26.1252 }
+	tid 3628: crawl_writeback: [165.548s] idle, dirty
+PROGRESS:
+extsz   datasz  point gen_min gen_max this cycle start tm_left   next cycle ETA
+----- -------- ------ ------- ------- ---------------- ------- ----------------
+  max   1.005T   idle 1529632 1529633 2025-09-23 16:49       -                -
+  32M 436.703G   idle 1529632 1529633 2025-09-23 16:49       -                -
+   8M 108.843G   idle 1529632 1529633 2025-09-23 16:49       -                -
+   2M  54.375G   idle 1529632 1529633 2025-09-23 16:49       -                -
+ 512K  89.562G   idle 1529632 1529633 2025-09-23 16:49       -                -
+ 128K  49.704G 009432       0 1527508 2025-09-21 17:07  29w 5d 2026-04-20 11:36
+total   1.727T        gen_now 1529634                  updated 2025-09-23 16:49
