@@ -150,7 +150,13 @@ impl BeesCollector {
             }
             if line.starts_with("PROGRESS:") {
                 parser_state = ParserState::Progress;
-                progress = Self::parse_progress_lines(&mut line_iter)?;
+                progress = match Self::parse_progress_lines(&mut line_iter) {
+                    Ok(p) => p,
+                    Err(e) => {
+                        error!("Failed to parse PROGRESS section: {}", e);
+                        Vec::new()
+                    }
+                };
                 continue;
             }
 
