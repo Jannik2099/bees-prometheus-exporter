@@ -163,10 +163,8 @@ impl BeesCollector {
             match parser_state {
                 ParserState::Rates | ParserState::None => continue,
                 ParserState::Total => {
-                    match Self::parse_total_line(line) {
-                        Ok(parsed_metrics) => {
-                            stats.extend(parsed_metrics);
-                        }
+                    match Self::parse_total_line(line, &mut stats) {
+                        Ok(_) => {}
                         Err(e) => {
                             error!("Failed to parse TOTAL line '{}': {}", line, e);
                             // Continue processing other lines despite this error
@@ -193,11 +191,11 @@ impl BeesCollector {
         })
     }
 
-    fn parse_total_line(line: &str) -> Result<Vec<(String, f64)>> {
+    fn parse_total_line(line: &str, stats: &mut BTreeMap<String, f64>) -> Result<()> {
         static PATTERN: LazyLock<Regex> =
             LazyLock::new(|| Regex::new(r"(?-u:(\w+)=(\d+))").unwrap());
 
-        let mut ret = Vec::new();
+        let mut found: u64 = 0;
         for caps in line
             .split_ascii_whitespace()
             .filter_map(|word| PATTERN.captures(word))
@@ -218,15 +216,16 @@ impl BeesCollector {
                         caps.get(0).unwrap().as_str()
                     )
                 })?;
-            ret.push((metric_name, value));
+            stats.insert(metric_name, value);
+            found += 1;
         }
-        if ret.is_empty() {
+        if found == 0 {
             return Err(anyhow::anyhow!(
                 "No metrics parsed from TOTAL line: {}",
                 line
             ));
         }
-        Ok(ret)
+        Ok(())
     }
 
     fn parse_progress_lines(lines: &mut std::slice::Iter<String>) -> Result<Vec<ProgressRow>> {
