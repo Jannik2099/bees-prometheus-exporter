@@ -1,0 +1,33 @@
+name: Publish to crates.io
+on:
+  push:
+    tags: ["release/*"]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Rust
+        run: |
+          rustup update --no-self-update
+          rustup component add cargo
+
+      - name: Verify version tag
+        run: |
+          VERSION_TAG=${GITHUB_REF#refs/tags/release/}
+          CARGO_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          if [ "$VERSION_TAG" != "$CARGO_VERSION" ]; then
+            echo "Version tag ($VERSION_TAG) does not match Cargo.toml version ($CARGO_VERSION)"
+            exit 1
+          fi
+
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+
+      - run: cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
