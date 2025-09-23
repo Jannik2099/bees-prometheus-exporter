@@ -11,11 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install Rust
-        run: |
-          rustup update --no-self-update
-          rustup component add cargo
-
       - name: Verify version tag
         run: |
           VERSION_TAG=${GITHUB_REF#refs/tags/release/}

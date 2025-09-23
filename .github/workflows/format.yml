@@ -24,10 +24,5 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install rustfmt
-        run: |
-          rustup update --no-self-update
-          rustup component add cargo rustfmt
-
       - name: Run rustfmt
         run: cargo fmt --check

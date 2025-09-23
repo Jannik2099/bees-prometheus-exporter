@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
   push:
@@ -6,11 +6,11 @@ on:
     branches: [main]
 
 jobs:
-  clippy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Run clippy
-        run: cargo clippy -- -D warnings
+      - name: Run tests
+        run: cargo test
