@@ -1,11 +1,11 @@
 [package]
-name = "bees-prometheus-exporter"
-description = "Prometheus exporter for the bees deduplication daemon"
-version = "0.1.1"
-edition = "2024"
 authors = ["Jannik Glückert"]
+description = "Prometheus exporter for the bees deduplication daemon"
+edition = "2024"
 license = "GPL-3.0-or-later"
+name = "bees-prometheus-exporter"
 readme = "README.md"
+version = "0.1.1"
 
 [profile.release]
 lto = "thin"
@@ -13,22 +13,14 @@ opt-level = 3
 strip = "debuginfo"
 
 [dependencies]
-regex = { version = "1.11", features = [
-  "std",
-  "perf",
-], default-features = false }
-prometheus-client = "0.24.0"
-log = "0.4"
-clap = { version = "4.5", features = ["derive"] }
-tokio = { version = "1.47", features = ["full"] }
 anyhow = "1.0"
+axum = { default-features = false, features = ["http1", "tokio"], version = "0.8.4" }
+clap = { features = ["derive"], version = "4.5" }
 glob = "0.3"
-uuid = "1.18.1"
-axum = { version = "0.8.4", features = [
-  "http1",
-  "tokio",
-], default-features = false }
-log4rs = { version = "1.4.0", features = [
-  "console_appender",
-], default-features = false }
 landlock = "0.4.3"
+log = "0.4"
+log4rs = { default-features = false, features = ["console_appender"], version = "1.4.0" }
+prometheus-client = "0.24.0"
+regex = { default-features = false, features = ["perf", "std"], version = "1.11" }
+tokio = { features = ["full"], version = "1.47" }
+uuid = "1.18.1"

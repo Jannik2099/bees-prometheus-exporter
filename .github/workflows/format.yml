@@ -14,9 +14,23 @@ jobs:
 
       - uses: actions/setup-node@v5
 
-      - run: npm install prettier prettier-plugin-toml
+      - run: npm install prettier
 
       - run: npx prettier --check .
+
+  taplo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Taplo
+        run: |
+          curl -fsSL https://github.com/tamasfe/taplo/releases/latest/download/taplo-linux-x86_64.gz \
+            | gzip -d - | install -m 755 /dev/stdin /usr/local/bin/taplo
+
+      - name: Run Taplo
+        run: taplo format --check
 
   rustfmt:
     runs-on: ubuntu-latest
