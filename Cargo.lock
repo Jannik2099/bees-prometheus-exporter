@@ -174,7 +174,7 @@ dependencies = [
 
 [[package]]
 name = "bees-prometheus-exporter"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "anyhow",
  "axum",
