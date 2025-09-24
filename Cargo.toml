@@ -2,6 +2,7 @@
 authors = ["Jannik Glückert"]
 description = "Prometheus exporter for the bees deduplication daemon"
 edition = "2024"
+homepage = "https://github.com/Jannik2099/bees-prometheus-exporter"
 license = "GPL-3.0-or-later"
 name = "bees-prometheus-exporter"
 readme = "README.md"
