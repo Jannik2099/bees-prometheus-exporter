@@ -5,7 +5,7 @@ edition = "2024"
 license = "GPL-3.0-or-later"
 name = "bees-prometheus-exporter"
 readme = "README.md"
-version = "0.1.1"
+version = "0.1.2"
 
 [profile.release]
 lto = "thin"
