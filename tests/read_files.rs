@@ -1,9 +1,67 @@
+use log::{Level, Log, Metadata, Record};
+use std::sync::{Arc, LazyLock, Mutex};
 use uuid::Uuid;
 
 use bees_prometheus_exporter::collector::BeesCollector;
 
+// Global logger for capturing all test log messages
+static GLOBAL_MESSAGES: LazyLock<Arc<Mutex<Vec<(Level, String)>>>> = LazyLock::new(|| {
+    let messages = Arc::new(Mutex::new(Vec::new()));
+    let logger = GlobalTestLogger {
+        messages: Arc::clone(&messages),
+    };
+    let _ = log::set_boxed_logger(Box::new(logger));
+    log::set_max_level(log::LevelFilter::Debug);
+    messages
+});
+
+struct GlobalTestLogger {
+    messages: Arc<Mutex<Vec<(Level, String)>>>,
+}
+
+impl Log for GlobalTestLogger {
+    fn enabled(&self, _metadata: &Metadata) -> bool {
+        true
+    }
+
+    fn log(&self, record: &Record) {
+        if let Ok(mut msgs) = self.messages.lock() {
+            msgs.push((record.level(), record.args().to_string()));
+        }
+    }
+
+    fn flush(&self) {}
+}
+
+fn clear_and_get_messages() -> Arc<Mutex<Vec<(Level, String)>>> {
+    let messages = Arc::clone(&GLOBAL_MESSAGES);
+    // Clear previous messages for this test
+    if let Ok(mut msgs) = messages.lock() {
+        msgs.clear();
+    }
+    messages
+}
+
+fn assert_no_warning_or_error_logs(messages: &Arc<Mutex<Vec<(Level, String)>>>) {
+    let log_messages = messages.lock().unwrap();
+    let warning_or_error_messages: Vec<_> = log_messages
+        .iter()
+        .filter(|(level, _)| matches!(level, Level::Warn | Level::Error))
+        .collect();
+
+    assert!(
+        warning_or_error_messages.is_empty(),
+        "No warning or error log messages should be emitted during collection. Found {} messages: {:#?}",
+        warning_or_error_messages.len(),
+        warning_or_error_messages
+    );
+}
+
 #[tokio::test]
 async fn test_collect_all_data_from_tests_directory() {
+    // Set up log capturing to check for warning and error messages
+    let messages = clear_and_get_messages();
+
     // Get the tests directory relative to the project root at compile time
     let tests_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("tests");
 
@@ -91,4 +149,8 @@ async fn test_collect_all_data_from_tests_directory() {
         "Successfully collected and validated data for {} UUIDs",
         data.len()
     );
+
+    // Check that no warning or error log messages were emitted
+    // The collector is designed to succeed under any circumstance, dropping metrics that produced errors
+    assert_no_warning_or_error_logs(&messages);
 }
