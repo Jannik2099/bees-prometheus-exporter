@@ -13,6 +13,8 @@ use std::sync::LazyLock;
 use std::time::SystemTime;
 use tokio::fs::{File, metadata};
 use tokio::io::{AsyncBufReadExt, BufReader};
+use tokio_stream::wrappers::LinesStream;
+use tokio_stream::{Stream, StreamExt};
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]
@@ -123,23 +125,14 @@ impl BeesCollector {
         debug!("Reading stats from {:?}", stats_file);
 
         let reader = BufReader::new(file);
-        let mut lines = reader.lines();
-        let mut file_lines = Vec::new();
-
-        while let Some(line) = lines
-            .next_line()
-            .await
-            .context("Failed to read line from file")?
-        {
-            file_lines.push(line);
-        }
+        let mut lines = LinesStream::new(reader.lines());
 
         let mut stats: BTreeMap<String, f64> = BTreeMap::new();
         let mut progress: Vec<ProgressRow> = Vec::new();
         let mut parser_state = ParserState::None;
-        let mut line_iter = file_lines.iter();
 
-        while let Some(line) = line_iter.next() {
+        while let Some(line) = lines.next().await {
+            let line = line.context("Failed to read line from stats file")?;
             if line.starts_with("TOTAL:") {
                 parser_state = ParserState::Total;
                 continue;
@@ -150,7 +143,7 @@ impl BeesCollector {
             }
             if line.starts_with("PROGRESS:") {
                 parser_state = ParserState::Progress;
-                progress = match Self::parse_progress_lines(&mut line_iter) {
+                progress = match Self::parse_progress_lines(&mut lines).await {
                     Ok(p) => p,
                     Err(e) => {
                         error!("Failed to parse PROGRESS section: {}", e);
@@ -163,7 +156,7 @@ impl BeesCollector {
             match parser_state {
                 ParserState::Rates | ParserState::None => continue,
                 ParserState::Total => {
-                    match Self::parse_total_line(line, &mut stats) {
+                    match Self::parse_total_line(&line, &mut stats) {
                         Ok(_) => {}
                         Err(e) => {
                             error!("Failed to parse TOTAL line '{}': {}", line, e);
@@ -228,9 +221,12 @@ impl BeesCollector {
         Ok(())
     }
 
-    fn parse_progress_lines(lines: &mut std::slice::Iter<String>) -> Result<Vec<ProgressRow>> {
+    async fn parse_progress_lines<S: Stream<Item = Result<String, std::io::Error>> + Unpin>(
+        lines: &mut S,
+    ) -> Result<Vec<ProgressRow>> {
         // Check for header line
-        if let Some(line) = lines.next() {
+        if let Some(line) = lines.next().await {
+            let line = line.context("Failed to read header line in PROGRESS section")?;
             if !line.starts_with("extsz") {
                 return Err(anyhow::anyhow!(
                     "Unexpected format in PROGRESS section: expected header starting with 'extsz'"
@@ -241,7 +237,8 @@ impl BeesCollector {
         }
 
         // Check for separator line
-        if let Some(line) = lines.next() {
+        if let Some(line) = lines.next().await {
+            let line = line.context("Failed to read separator line in PROGRESS section")?;
             if !line.starts_with("-----") {
                 return Err(anyhow::anyhow!(
                     "Unexpected format in PROGRESS section: expected separator line"
@@ -253,7 +250,8 @@ impl BeesCollector {
 
         let mut ret = Vec::new();
 
-        for line in lines {
+        while let Some(line) = lines.next().await {
+            let line = line.context("Failed to read line in PROGRESS section")?;
             let parts: Vec<&str> = line.split_ascii_whitespace().collect();
             if parts.len() < 5 {
                 continue;

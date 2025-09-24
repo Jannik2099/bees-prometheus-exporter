@@ -24,4 +24,5 @@ log4rs = { default-features = false, features = ["console_appender"], version = 
 prometheus-client = "0.24.0"
 regex = { default-features = false, features = ["perf", "perf-dfa-full", "std"], version = "1.11" }
 tokio = { features = ["full"], version = "1.47" }
+tokio-stream = { default-features = false, features = ["io-util"], version = "0.1.17" }
 uuid = "1.18.1"
