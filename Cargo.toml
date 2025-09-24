@@ -22,6 +22,6 @@ landlock = "0.4.3"
 log = "0.4"
 log4rs = { default-features = false, features = ["console_appender"], version = "1.4.0" }
 prometheus-client = "0.24.0"
-regex = { default-features = false, features = ["perf", "std"], version = "1.11" }
+regex = { default-features = false, features = ["perf", "perf-dfa-full", "std"], version = "1.11" }
 tokio = { features = ["full"], version = "1.47" }
 uuid = "1.18.1"
