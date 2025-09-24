@@ -14,3 +14,20 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+  miri:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Miri
+        run: |
+          rustup toolchain install nightly --component miri
+          rustup override set nightly
+          cargo miri setup
+
+      - name: Run Miri tests
+        run: |
+          export MIRIFLAGS="-Zmiri-disable-isolation"
+          cargo miri test
