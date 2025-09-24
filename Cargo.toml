@@ -6,7 +6,7 @@ homepage = "https://github.com/Jannik2099/bees-prometheus-exporter"
 license = "GPL-3.0-or-later"
 name = "bees-prometheus-exporter"
 readme = "README.md"
-version = "0.1.3"
+version = "1.0.0"
 
 [profile.release]
 lto = "thin"
