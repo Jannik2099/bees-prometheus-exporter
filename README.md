@@ -1,27 +1,13 @@
 # Bees Prometheus Exporter
 
-A Prometheus metrics exporter for the [Bees](https://github.com/zygo/bees) deduplication daemon, written in Rust.
+A Prometheus metrics exporter for the [Bees](https://github.com/zygo/bees) deduplication daemon.
 
 ## Installation
 
-### From Source
-
-Clone the repository and build:
+Install directly from crates.io:
 
 ```bash
-git clone https://github.com/Jannik2099/bees-prometheus-exporter
-cd bees-prometheus-exporter
-cargo build --release
-```
-
-The binary will be located at `target/release/bees-prometheus-exporter`.
-
-### Using Cargo
-
-Install directly from the repository:
-
-```bash
-cargo install --git https://github.com/Jannik2099/bees-prometheus-exporter
+cargo install bees-prometheus-exporter
 ```
 
 ## Usage
@@ -40,7 +26,7 @@ The exporter will start on port 8080 and read Bees statistics from `/run/bees/`.
 bees-prometheus-exporter [OPTIONS]
 ```
 
-- `-s, --bees-work-dir PATH`: Path to Bees work directory (default: `/run/bees`)
+- `-b, --bees-work-dir PATH`: Path to Bees work directory (default: `/run/bees`)
 - `-p, --port PORT`: Port to bind the HTTP server to (default: `8080`)
 - `-a, --address ADDRESS`: Address to bind the HTTP server to (default: `::0`)
 - `-l, --log-level LEVEL`: Logging level - error, warn, info, debug, trace (default: `info`)
@@ -76,7 +62,8 @@ When `point` is idle, `bees_progress_summary_point_idle` reports 1, else 0
 
 ## Configuration
 
-Note that, by default, `/run/bees` is root-owned. The exporter requires read access to the directory.
+Note that, by default, `/run/bees` is root-owned. The exporter requires read access to the directory.  
+The exporter uses landlock to confine filesystem and network access. Landlock operates on fds, not paths, which means that deleting and recreating the bees directory will not show up in the exporter.
 
 ### Prometheus Configuration
 
@@ -87,7 +74,7 @@ scrape_configs:
   - job_name: "bees"
     static_configs:
       - targets: ["localhost:8080"]
-    scrape_interval: 30s # bees updates the stats file once per second
+    scrape_interval: 1s # bees updates the stats file once per second
 ```
 
 ## Monitoring Examples
