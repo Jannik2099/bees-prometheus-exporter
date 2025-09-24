@@ -26,7 +26,7 @@ pub enum PointValue {
 #[derive(Debug, Clone)]
 pub struct ProgressRow {
     pub extsz: String,
-    pub datasz: u64,
+    pub datasz: Option<u64>, // this can be empty if bees has not collected enough samples
     pub point: PointValue,
     pub gen_min: u64,
     pub gen_max: u64,
@@ -313,7 +313,7 @@ impl BeesCollector {
         Ok(ret)
     }
 
-    fn datasz_to_bytes(datasz: &str) -> Result<u64> {
+    fn datasz_to_bytes(datasz: &str) -> Result<Option<u64>> {
         if datasz.is_empty() {
             return Err(anyhow::anyhow!("Empty datasz string"));
         }
@@ -327,12 +327,13 @@ impl BeesCollector {
             'M' => 1024_u64.pow(2),
             'G' => 1024_u64.pow(3),
             'T' => 1024_u64.pow(4),
+            '-' => return Ok(None),
             _ => return Err(anyhow::anyhow!("Invalid datasz suffix")),
         };
 
         let number_part = &datasz[..datasz.len() - 1];
         let number: f64 = number_part.parse()?;
-        Ok((number * multiplier as f64) as u64)
+        Ok(Some((number * multiplier as f64) as u64))
     }
 }
 
@@ -351,7 +352,7 @@ impl Collector for BeesCollector {
 
         // Group metrics by type to encode descriptors properly
         let mut stats_counters: BTreeMap<String, Vec<(UuidLabel, f64)>> = BTreeMap::new();
-        let mut datasz_gauges: Vec<(UuidExtentLabel, i64)> = Vec::new();
+        let mut datasz_gauges: Vec<(UuidExtentLabel, Option<u64>)> = Vec::new();
         let mut point_gauges: Vec<(UuidExtentLabel, i64)> = Vec::new();
         let mut point_idle_gauges: Vec<(UuidExtentLabel, i64)> = Vec::new();
         let mut gen_min_gauges: Vec<(UuidExtentLabel, i64)> = Vec::new();
@@ -382,7 +383,7 @@ impl Collector for BeesCollector {
                     extent_size: progress_row.extsz.clone(),
                 };
 
-                datasz_gauges.push((label.clone(), progress_row.datasz as i64));
+                datasz_gauges.push((label.clone(), progress_row.datasz));
 
                 // Handle point and idle
                 match progress_row.point {
@@ -429,6 +430,10 @@ impl Collector for BeesCollector {
                 prometheus_client::metrics::MetricType::Gauge,
             )?;
             for (label, value) in datasz_gauges {
+                if value.is_none() {
+                    continue;
+                }
+                let value = value.unwrap();
                 let gauge = ConstGauge::new(value);
                 let sample_encoder = metric_encoder.encode_family(&label)?;
                 gauge.encode(sample_encoder)?;

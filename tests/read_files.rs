@@ -30,6 +30,7 @@ async fn test_collect_all_data_from_tests_directory() {
         "0cadef6c-c480-41f2-95b7-511609815820",
         "464d43b3-8362-45b6-8f65-198ac3dcb507",
         "798ca972-f994-46ab-8e1a-9c3a24c92e85",
+        "ab0f09d8-cbf5-461b-9068-31d9a69cb163",
     ];
 
     for uuid_str in expected_uuids {
