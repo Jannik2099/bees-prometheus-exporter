@@ -15,7 +15,7 @@ strip = "debuginfo"
 
 [dependencies]
 anyhow = "1.0"
-axum = { default-features = false, features = ["http1", "tokio"], version = "0.8.4" }
+axum = { default-features = false, features = ["http1", "tokio"], version = "0.8.5" }
 clap = { features = ["derive"], version = "4.5" }
 glob = "0.3"
 landlock = "0.4.3"
