@@ -1,0 +1,46 @@
+name: Cargo Update
+
+on:
+  schedule:
+    - cron: "0 4 * * *" # trigger two hours before Dependabot to avoid duplicate work
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment: pr-creator
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Run cargo update
+        run: cargo update
+
+      - name: Create pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          # https://github.com/orgs/community/discussions/65321#discussioncomment-8003574
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          commit-message: "chore: cargo update"
+          title: "chore: cargo update"
+          body: |
+            Automated `cargo update` run.
+          branch: automation/cargo-update
+          add-paths: |
+            Cargo.lock
+          delete-branch: true
+
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-url != ''
+        env:
+          GH_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        run: gh pr merge --auto --rebase --delete-branch "${{ steps.cpr.outputs.pull-request-url }}"

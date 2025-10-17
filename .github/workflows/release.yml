@@ -14,7 +14,7 @@ jobs:
       - name: Verify version tag
         run: |
           VERSION_TAG=${GITHUB_REF#refs/tags/release/}
-          CARGO_VERSION=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')
+          CARGO_VERSION=$(cargo metadata --locked --no-deps --format-version 1 | jq -r '.packages[0].version')
           if [ "$VERSION_TAG" != "$CARGO_VERSION" ]; then
             echo "Version tag ($VERSION_TAG) does not match Cargo.toml version ($CARGO_VERSION)"
             exit 1
@@ -23,6 +23,6 @@ jobs:
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
 
-      - run: cargo publish
+      - run: cargo publish --locked
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
