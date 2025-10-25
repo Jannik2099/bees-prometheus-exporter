@@ -30,6 +30,7 @@ jobs:
         with:
           # https://github.com/orgs/community/discussions/65321#discussioncomment-8003574
           token: ${{ secrets.MY_GITHUB_TOKEN }}
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           commit-message: "chore: cargo update"
           title: "chore: cargo update"
           body: |
